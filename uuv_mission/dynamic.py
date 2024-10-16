@@ -82,8 +82,7 @@ class Mission:
         reference = missionData['reference'].to_list()
         cave_height = missionData['cave_height'].to_list()
         cave_depth = missionData['cave_depth'].to_list()
-        
-        pass
+        return cls(reference, cave_height, cave_depth)
 
 
 class ClosedLoop:
@@ -100,13 +99,15 @@ class ClosedLoop:
         positions = np.zeros((T, 2))
         actions = np.zeros(T)
         self.plant.reset_state()
+        observation_tprevious = 0
 
         for t in range(T):
             positions[t] = self.plant.get_position()
             observation_t = self.plant.get_depth()
             # Call your controller here
+            actions[t] = self.controller(observation_t, observation_tprevious, mission.reference, t)
+            observation_tprevious = observation_t
             self.plant.transition(actions[t], disturbances[t])
-
         return Trajectory(positions)
         
     def simulate_with_random_disturbances(self, mission: Mission, variance: float = 0.5) -> Trajectory:
