@@ -1,6 +1,6 @@
 #Define constants to be used in controller
-Kp = 0.15
-Kd = 0.6
+Kp = 0.08
+Kd = 0.7
 
 def PDcontroller(currentpos, previouspos, references, t):
     e_tcurrent = references[t]-currentpos #Calculate the current error signal
